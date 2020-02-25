@@ -6,13 +6,15 @@ defmodule Openskill.UtilTest do
   describe "#team_rating" do
     test "aggregates team data" do
       r = Openskill.rating()
+      t1 = [r, r, r]
+      t2 = [r]
+      t3 = [r, r]
 
-      [{mu1, sigma1}, {mu2, sigma2}, {mu3, sigma3}] =
-        Util.team_rating([
-          [r, r, r],
-          [r],
-          [r, r]
-        ])
+      [
+        {mu1, sigma1, team1, i1},
+        {mu2, sigma2, team2, i2},
+        {mu3, sigma3, team3, i3}
+      ] = Util.team_rating([t1, t2, t3])
 
       assert 75 == mu1
       assert 25 == mu2
@@ -20,6 +22,12 @@ defmodule Openskill.UtilTest do
       assert_in_delta sigma1, 208.3333, @epsilon
       assert_in_delta sigma2, 69.4444, @epsilon
       assert_in_delta sigma3, 138.8889, @epsilon
+      assert team1 == t1
+      assert team2 == t2
+      assert team3 == t3
+      assert i1 == 1
+      assert i2 == 2
+      assert i3 == 3
     end
   end
 

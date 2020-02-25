@@ -1,11 +1,10 @@
 # Openskill
 
-**TODO: Add description**
+Elixir implementation of Weng-Lin Rating, as described at https://www.csie.ntu.edu.tw/~cjlin/papers/online_ranking
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `openskill` to your list of dependencies in `mix.exs`:
+Add `openskill` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
@@ -14,8 +13,3 @@ def deps do
   ]
 end
 ```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/openskill](https://hexdocs.pm/openskill).
-

@@ -1,9 +1,21 @@
 defmodule Openskill.Util do
+  def score(q, i) do
+    cond do
+      q < i -> 0.0
+      q == i -> 0.5
+      q > i -> 1.0
+    end
+  end
+
   def team_rating(game) do
-    Enum.map(game, fn team ->
+    game
+    |> Enum.with_index(1)
+    |> Enum.map(fn {team, i} ->
       {
         team |> Enum.map(fn {mu, _sigma} -> mu end) |> Enum.sum(),
-        team |> Enum.map(fn {_mu, sigma} -> sigma * sigma end) |> Enum.sum()
+        team |> Enum.map(fn {_mu, sigma} -> sigma * sigma end) |> Enum.sum(),
+        team,
+        i
       }
     end)
   end
