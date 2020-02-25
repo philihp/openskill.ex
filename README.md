@@ -1,6 +1,6 @@
 # Openskill
 
-Elixir implementation of Weng-Lin Rating, as described at https://www.csie.ntu.edu.tw/~cjlin/papers/online_ranking
+Elixir implementation of Weng-Lin Rating, as described at https://www.csie.ntu.edu.tw/~cjlin/papers/online_ranking/online_journal.pdf
 
 ## Installation
 
