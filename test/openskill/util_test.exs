@@ -31,6 +31,23 @@ defmodule Openskill.UtilTest do
     end
   end
 
+  describe "#ladder_pairs" do
+    test "two element ranks" do
+      assert [[2], [1]] ==
+               Util.ladder_pairs([1, 2])
+    end
+
+    test "three element ranks" do
+      assert [[2], [1, 3], [2]] ==
+               Util.ladder_pairs([1, 2, 3])
+    end
+
+    test "four element ranks" do
+      assert [[2], [1, 3], [2, 4], [3]] ==
+               Util.ladder_pairs([1, 2, 3, 4])
+    end
+  end
+
   describe "#default_weights" do
     test "empty list" do
       assert [] = Util.default_weights([])
