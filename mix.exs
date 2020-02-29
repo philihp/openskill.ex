@@ -31,7 +31,8 @@ defmodule Openskill.MixProject do
   defp deps do
     [
       {:mix_test_watch, "~> 1.0", only: :dev, runtime: false},
-      {:math, "~> 0.5.0"}
+      {:math, "~> 0.5.0"},
+      {:statistics, "~> 0.6.2"}
     ]
   end
 end

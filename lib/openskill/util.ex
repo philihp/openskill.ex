@@ -57,37 +57,11 @@ defmodule Openskill.Util do
   end
 
   def phi_minor(x) do
-    Math.exp(-0.5 * x * x) / Math.sqrt(2 * Math.pi())
+    Statistics.Distributions.Normal.pdf().(x)
   end
 
   def phi_major(x) do
-    z = abs(x / Math.sqrt(2))
-    t = 1 / (1 + 0.5 * z)
-
-    res =
-      t *
-        Math.exp(
-          -z * z - 1.26551223 +
-            t *
-              (1.00002368 +
-                 t *
-                   (0.37409196 +
-                      t *
-                        (0.09678418 +
-                           t *
-                             (-0.18628806 +
-                                t *
-                                  (0.27886807 +
-                                     t *
-                                       (-1.13520398 +
-                                          t * (1.48851587 + t * (-0.82215223 + t * 0.17087277))))))))
-        )
-
-    if x >= 0 do
-      (2.0 - res) / 2.0
-    else
-      res / 2.0
-    end
+    Statistics.Distributions.Normal.cdf().(x)
   end
 
   def v(x, t) do
