@@ -6,7 +6,6 @@ defmodule Openskill.BradleyTerryPart do
 
   def rate(game, _options \\ []) do
     team_ratings = Util.team_rating(game)
-    gamma = Enum.count(team_ratings)
     adjacent_teams = Util.ladder_pairs(team_ratings)
 
     Enum.map(Enum.zip(team_ratings, adjacent_teams), fn {teami_rating, teami_adjacent} ->
@@ -19,10 +18,11 @@ defmodule Openskill.BradleyTerryPart do
           ciq = Math.sqrt(teami_sigmasq + teamq_sigmasq + @twobetasq)
           piq = 1 / (1 + Math.exp((teamq_mu - teami_mu) / ciq))
           sigsq_to_ciq = teami_sigmasq / ciq
+          gamma = Math.sqrt(teami_sigmasq) / ciq
 
           {
             omega + sigsq_to_ciq * (Util.score(rankq, ranki) - piq),
-            delta + gamma * sigsq_to_ciq / ciq * piq * (1 - piq) / gamma
+            delta + gamma * sigsq_to_ciq / ciq * piq * (1 - piq)
           }
         end)
 

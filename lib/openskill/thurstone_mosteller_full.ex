@@ -7,7 +7,6 @@ defmodule Openskill.ThurstoneMostellerFull do
 
   def rate(game, _options \\ []) do
     team_ratings = Util.team_rating(game)
-    gamma = 1 / Enum.count(team_ratings)
 
     Enum.map(team_ratings, fn {teami_mu, teami_sigmasq, teami, ranki} ->
       {omegai, deltai} =
@@ -17,6 +16,7 @@ defmodule Openskill.ThurstoneMostellerFull do
           ciq = Math.sqrt(teami_sigmasq + teamq_sigmasq + @twobetasq)
           tmp = (teami_mu - teamq_mu) / ciq
           sigsq_to_ciq = teami_sigmasq / ciq
+          gamma = Math.sqrt(teami_sigmasq) / ciq
 
           cond do
             rankq > ranki ->
