@@ -8,7 +8,12 @@ defmodule Openskill.MixProject do
       elixir: "~> 1.9",
       description: description(),
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      package: [
+        maintainers: ["Philihp Busby"],
+        licenses: ["MIT"],
+        links: %{github: "https://github.com/philihp/openskill"}
+      ]
     ]
   end
 
@@ -20,7 +25,6 @@ defmodule Openskill.MixProject do
     """
   end
 
-  # Run "mix help compile.app" to learn about applications.
   def application do
     [
       extra_applications: [:logger]
