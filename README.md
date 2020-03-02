@@ -1,3 +1,6 @@
+[![Hex.pm](https://img.shields.io/hexpm/v/openskill)](https://hex.pm/packages/openskill)
+
+
 # Openskill
 
 Elixir implementation of Weng-Lin Rating, as described at https://www.csie.ntu.edu.tw/~cjlin/papers/online_ranking/online_journal.pdf
@@ -56,8 +59,8 @@ When displaying a rating, or sorting a list of ratings, you can use `ordinal`
 
 By default, this returns `mu - 3*sigma`, showing a rating for which there's a 99.5% likelihood the player's true rating is higher, so with early games, a player's ordinal rating will usually go up and could go up even if that player loses.
 
-## Unimplemented Features
+## TODO
 
-* Support shuffled rankings, e.g. `Openskill.rank([[p1],[p2],[p3],[p4]], ranks: [1, 4, 2, 3])`
+* Support shuffled rankings, e.g. `Openskill.rank([[p1],[p2],[p3],[p4]], ranks: [1, 4, 2, 3])`.
 * Support tied rankings, e.g. `Openskill.rank([[p1],[p2],[p3],[p4]], ranks: [1, 2, 2, 4])`
 * Configurable alternate `gamma` to avoid ill-conditioning problems from large numbers of teams, as discussed in the paper.
