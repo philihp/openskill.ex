@@ -14,9 +14,9 @@ defmodule Openskill.MixProject do
 
   def description do
     """
-    A Bayesian approximation method for skill-ranking, with online-updates.
-    Implementation derived from Weng-Lin with a Plackett-Luce model.
-    Unlike TrueSkill, commercial usage does not require a license from Microsoft.
+    Weng-Lin Bayesian approximation method for online skill-ranking.
+
+    Orders of magnitude faster over Microsoft TrueSkill, with better prediction, and commercial usage does not require a license.
     """
   end
 

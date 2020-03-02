@@ -13,3 +13,10 @@ def deps do
   ]
 end
 ```
+
+## Usage
+
+## Unimplemented Features
+
+* Support shuffled rankings, e.g. [1, 4, 2, 3]
+* Support tied rankings, e.g. [1, 2, 2, 4]
