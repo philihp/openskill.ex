@@ -6,7 +6,6 @@ defmodule Openskill.PlackettLuce do
 
   def rate(game, _options \\ []) do
     team_ratings = Util.team_rating(game)
-    gamma = 1 / Enum.count(game)
 
     c =
       Enum.map(team_ratings, fn {_, team_sigmasq, _, _} ->
@@ -14,7 +13,6 @@ defmodule Openskill.PlackettLuce do
       end)
       |> Enum.sum()
       |> Math.sqrt()
-      |> IO.inspect(label: :c)
 
     sum_q =
       team_ratings
@@ -29,7 +27,6 @@ defmodule Openskill.PlackettLuce do
       |> Enum.with_index(1)
       |> Enum.map(fn {k, v} -> {v, k} end)
       |> Map.new()
-      |> IO.inspect(label: :sum_q)
 
     a =
       team_ratings
@@ -63,16 +60,9 @@ defmodule Openskill.PlackettLuce do
         end)
         |> Enum.unzip()
 
-      IO.inspect(omega_set, label: :omega_set)
-      IO.inspect(delta_set, label: :delta_set)
-
-      omegai =
-        (Enum.sum(omega_set) * teami_sigmasq / c)
-        |> IO.inspect(label: :omegai)
-
-      deltai =
-        (Enum.sum(delta_set) * teami_sigmasq / c / c * gamma)
-        |> IO.inspect(label: :deltai)
+      gamma = Math.sqrt(teami_sigmasq) / c
+      omegai = Enum.sum(omega_set) * teami_sigmasq / c
+      deltai = gamma * Enum.sum(delta_set) * teami_sigmasq / c / c
 
       for {muij, sigmaij} <- teami do
         sigmaijsq = sigmaij * sigmaij
