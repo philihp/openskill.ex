@@ -27,13 +27,15 @@ defmodule Openskill.MixProject do
 
   def application do
     [
-      extra_applications: [:logger]
+      extra_applications: [:logger],
+      test_coverage: [tool: Coverex.Task]
     ]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:coverex, "~> 1.4.10", only: :test},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:mix_test_watch, "~> 1.0", only: :dev, runtime: false},
       {:math, "~> 0.5.0"},

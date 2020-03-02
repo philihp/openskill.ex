@@ -18,8 +18,14 @@ jobs:
       run: mix deps.get
     - name: Run Tests
       run: mix test
-    - name: Coverage
-      uses: coverallsapp/github-action@v1.0.1
+    - name: Coveralls Parallel
+      uses: coverallsapp/github-action@master
       with:
-        github-token: ${{ secrets.coveralls_token }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
         parallel: true
+        path-to-lcov: ./coverage/lcov.info
+    - name: Coveralls Finished
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        parallel-finished: true
