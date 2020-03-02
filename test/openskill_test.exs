@@ -22,6 +22,16 @@ defmodule OpenskillTest do
     end
   end
 
+  describe "#ordinal" do
+    test "accepts a gaussian, returns an ordinal" do
+      assert 15 == Openskill.ordinal({30, 5})
+    end
+
+    test "default ordinal is 0" do
+      assert 0 == Openskill.ordinal(Openskill.rating())
+    end
+  end
+
   describe "#rate" do
     test "accepts bradley-terry with full pairings" do
       a1 = Openskill.rating(29.182, 4.782)

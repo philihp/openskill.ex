@@ -1,10 +1,14 @@
 defmodule Openskill do
-  alias Openskill.{Environment, Rating, Util}
+  alias Openskill.{Environment, Util}
 
   @env %Environment{}
 
   def rating(mu \\ nil, sigma \\ nil) do
     {mu || @env.mu, sigma || @env.sigma}
+  end
+
+  def ordinal({mu, sigma}) do
+    mu - @env.z * sigma
   end
 
   def rate(rating_groups, options \\ []) do
