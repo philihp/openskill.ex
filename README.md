@@ -1,6 +1,6 @@
 [![Hex.pm](https://img.shields.io/hexpm/v/openskill)](https://hex.pm/packages/openskill)
 ![Elixir CI](https://github.com/philihp/openskill/workflows/Elixir%20CI/badge.svg?branch=master)
-[![Coverage Status](https://coveralls.io/repos/github/philihp/openskill/badge.svg?branch=master)](https://coveralls.io/github/philihp/openskill?branch=coveralls)
+[![Coverage Status](https://coveralls.io/repos/github/philihp/openskill/badge.svg?branch=master)](https://coveralls.io/github/philihp/openskill?branch=master)
 
 # Openskill
 
