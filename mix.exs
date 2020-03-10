@@ -13,7 +13,8 @@ defmodule Openskill.MixProject do
         maintainers: ["Philihp Busby"],
         licenses: ["MIT"],
         links: %{github: "https://github.com/philihp/openskill"}
-      ]
+      ],
+      test_coverage: [tool: ExCoveralls]
     ]
   end
 
@@ -34,6 +35,7 @@ defmodule Openskill.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:excoveralls, "~> 0.12", only: :test},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:mix_test_watch, "~> 1.0", only: :dev, runtime: false},
       {:math, "~> 0.5.0"},
