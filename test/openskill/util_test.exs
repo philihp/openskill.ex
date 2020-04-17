@@ -83,4 +83,44 @@ defmodule Openskill.UtilTest do
       assert [1, 2] = Util.default_ranks([[:a, :b, :c], [:d, :e, :f]])
     end
   end
+
+  describe "#v" do
+    test "denominator less than threshold" do
+      assert 9900 = Util.v(-10000, -100)
+    end
+  end
+
+  describe "#w" do
+    test "denominator less than threshold" do
+      assert 1 = Util.w(-10000, -100)
+    end
+  end
+
+  describe "#vt" do
+    test "b small, x small" do
+      assert 1100 = Util.vt(-1000, -100)
+    end
+
+    test "b small, x big" do
+      assert -1100 = Util.vt(1000, -100)
+    end
+
+    test "b big, x small" do
+      assert 0.7978845600049808 = Util.vt(-1000, 1000)
+    end
+
+    test "b big, x big" do
+      assert 0.0 = Util.vt(0, 1000)
+    end
+  end
+
+  describe "#wt" do
+    test "under threshold, so just use 1.0" do
+      assert 1.0 = Util.wt(0, 0)
+    end
+
+    test "standard operating protocol" do
+      assert Util.wt(0, 10) < 0.00000000001
+    end
+  end
 end

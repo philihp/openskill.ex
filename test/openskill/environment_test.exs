@@ -2,8 +2,6 @@ defmodule Openskill.EnvironmentTest do
   use ExUnit.Case
   alias Openskill.Environment
 
-  @env %Environment{}
-
   test "#mu" do
     assert is_number(%Environment{}.mu)
   end
