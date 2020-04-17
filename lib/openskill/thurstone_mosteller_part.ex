@@ -34,11 +34,15 @@ defmodule Openskill.ThurstoneMostellerPart do
                 delta + gamma * sigsq_to_ciq / ciq * Util.w(-tmp, @epsilon / ciq)
               }
 
-            true ->
-              {
-                omega + sigsq_to_ciq * Util.vt(tmp, @epsilon / ciq),
-                delta + gamma * sigsq_to_ciq / ciq * Util.wt(tmp, @epsilon / ciq)
-              }
+              # the filter above ensures that rankq and ranki are never the same,
+              # however this would be necessary if supported tied rankings in 3+
+              # team matches.
+              #
+              # true ->
+              #   {
+              #     omega + sigsq_to_ciq * Util.vt(tmp, @epsilon / ciq),
+              #     delta + gamma * sigsq_to_ciq / ciq * Util.wt(tmp, @epsilon / ciq)
+              #   }
           end
         end)
 
