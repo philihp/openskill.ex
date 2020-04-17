@@ -1,7 +1,6 @@
-name: Elixir CI
+name: tests
 env:
   MIX_ENV: test
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 on: push
 
