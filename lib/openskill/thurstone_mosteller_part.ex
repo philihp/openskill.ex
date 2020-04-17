@@ -37,11 +37,15 @@ defmodule Openskill.ThurstoneMostellerPart do
             # the filter above ensures that rankq and ranki are never the same,
             # however this would be necessary if supported tied rankings in 3+
             # team matches.
+
+            # coveralls-ignore-start
             true ->
               {
                 omega + sigsq_to_ciq * Util.vt(tmp, @epsilon / ciq),
                 delta + gamma * sigsq_to_ciq / ciq * Util.wt(tmp, @epsilon / ciq)
               }
+
+              # coveralls-ignore-stop
           end
         end)
 
