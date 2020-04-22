@@ -1,6 +1,6 @@
 [![Hex.pm](https://img.shields.io/hexpm/v/openskill)](https://hex.pm/packages/openskill)
-![Test Status](https://github.com/philihp/openskill/workflows/tests/badge.svg?branch=master)
-[![Coverage Status](https://coveralls.io/repos/github/philihp/openskill/badge.svg?branch=master)](https://coveralls.io/github/philihp/openskill?branch=master)
+![Test Status](https://github.com/philihp/openskill.ex/workflows/tests/badge.svg?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/philihp/openskill.ex/badge.svg?branch=master)](https://coveralls.io/github/philihp/openskill.ex?branch=master)
 ![Hex Downloads](https://img.shields.io/hexpm/dt/openskill)
 [![Renovate Status](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com)
 
@@ -22,7 +22,7 @@ end
 
 ## Usage
 
-Ratings are kept as a tuple `{mu, sigma}` which represent a gaussian curve, where `mu` represents the *mean*, and `sigma` represents the spread or standard deviation. Create these with:
+Ratings are kept as a tuple `{mu, sigma}` which represent a gaussian curve, where `mu` represents the _mean_, and `sigma` represents the spread or standard deviation. Create these with:
 
 ```elixir
 > a1 = Openskill.rating
@@ -51,7 +51,7 @@ If `a1` and `a2` are on a team, and wins against a team of `b1` and `b2`, send t
 ]
 ```
 
-In more simplified matches with one team against another, the losing team's players' `mu` components should always go down, and up for  the winning team's players. `sigma` components should always go down.
+In more simplified matches with one team against another, the losing team's players' `mu` components should always go down, and up for the winning team's players. `sigma` components should always go down.
 
 When displaying a rating, or sorting a list of ratings, you can use `ordinal`
 
@@ -64,6 +64,6 @@ By default, this returns `mu - 3*sigma`, showing a rating for which there's a 99
 
 ## TODO
 
-* Support shuffled rankings, e.g. `Openskill.rank([[p1],[p2],[p3],[p4]], ranks: [1, 4, 2, 3])`.
-* Support tied rankings, e.g. `Openskill.rank([[p1],[p2],[p3],[p4]], ranks: [1, 2, 2, 4])`
-* Configurable alternate `gamma` to avoid ill-conditioning problems from large numbers of teams, as discussed in the paper.
+- Support shuffled rankings, e.g. `Openskill.rank([[p1],[p2],[p3],[p4]], ranks: [1, 4, 2, 3])`.
+- Support tied rankings, e.g. `Openskill.rank([[p1],[p2],[p3],[p4]], ranks: [1, 2, 2, 4])`
+- Configurable alternate `gamma` to avoid ill-conditioning problems from large numbers of teams, as discussed in the paper.

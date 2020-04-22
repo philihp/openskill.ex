@@ -4,7 +4,7 @@ defmodule Openskill.MixProject do
   def project do
     [
       app: :openskill,
-      version: "1.0.0",
+      version: "1.0.1",
       elixir: "~> 1.9",
       description: description(),
       start_permanent: Mix.env() == :prod,
@@ -12,7 +12,7 @@ defmodule Openskill.MixProject do
       package: [
         maintainers: ["Philihp Busby"],
         licenses: ["MIT"],
-        links: %{GitHub: "https://github.com/philihp/openskill"}
+        links: %{GitHub: "https://github.com/philihp/openskill.ex"}
       ],
       test_coverage: [tool: ExCoveralls]
     ]
