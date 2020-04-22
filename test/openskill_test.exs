@@ -33,6 +33,22 @@ defmodule OpenskillTest do
   end
 
   describe "#rate" do
+    test "rate accepts and runs a placket-luce model by default" do
+      a1 = Openskill.rating(29.182, 4.782)
+      b1 = Openskill.rating(27.174, 4.922)
+      c1 = Openskill.rating(16.672, 6.217)
+      d1 = Openskill.rating()
+
+      [[a2], [b2], [c2], [d2]] = Openskill.rate([[a1], [b1], [c1], [d1]])
+
+      assert [
+               [{30.209971908310553, 4.764898977359521}],
+               [{27.64460833689499, 4.882789305097372}],
+               [{17.403586731283518, 6.100723440599442}],
+               [{19.214790707434826, 7.8542613981643985}]
+             ] == [[a2], [b2], [c2], [d2]]
+    end
+
     test "accepts bradley-terry with full pairings" do
       a1 = Openskill.rating(29.182, 4.782)
       b1 = Openskill.rating(27.174, 4.922)
