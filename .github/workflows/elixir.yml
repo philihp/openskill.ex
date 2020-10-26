@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup elixir
-        uses: actions/setup-elixir@v1.0.0
+        uses: actions/setup-elixir@v1.4.2
         with:
           elixir-version: 1.9.x
           otp-version: 22.x
