@@ -38,7 +38,7 @@ defmodule Openskill.MixProject do
       {:excoveralls, "~> 0.13", only: :test},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:mix_test_watch, "~> 1.0", only: :dev, runtime: false},
-      {:math, "~> 0.5.0"},
+      {:math, "~> 0.6.0"},
       {:statistics, "~> 0.6.2"}
     ]
   end
