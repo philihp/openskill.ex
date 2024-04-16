@@ -53,6 +53,32 @@ If `a1` and `a2` are on a team, and wins against a team of `b1` and `b2`, send t
 
 In more simplified matches with one team against another, the losing team's players' `mu` components should always go down, and up for the winning team's players. `sigma` components should always go down.
 
+### Extended usage
+You can use `Openskill.rate_with_ids` to place an identifier next to each rating and preserve that identifier in the result.
+```elixir
+> [[a1, a2], [b1, b2]] = Openskill.rate_with_ids([[{"a1", a1}, {"a2", a2}], [{"b1", b1}, {"b2", b2}]])
+[
+  [
+    {"a1", {28.669648436582808, 8.071520788025197}},
+    {"a2", {33.83086971107981, 5.062772998705765}}
+  ],
+  [
+    {"b1", {43.071274808241974, 2.4166900452721256}},
+    {"b2", {23.149503312339064, 6.1378606973362135}}
+  ]
+]
+
+This function also has the option `:as_map` which can be used to produce a flat map of the results.
+> [[a1, a2], [b1, b2]] = Openskill.rate_with_ids([[{"a1", a1}, {"a2", a2}], [{"b1", b1}, {"b2", b2}]], as_map: true)
+%{
+  "a1" => {28.669648436582808, 8.071520788025197},
+  "a2" => {33.83086971107981, 5.062772998705765},
+  "b1" => {43.071274808241974, 2.4166900452721256},
+  "b2" => {23.149503312339064, 6.1378606973362135}
+}
+```
+
+### Showing ratings
 When displaying a rating, or sorting a list of ratings, you can use `ordinal`
 
 ```elixir

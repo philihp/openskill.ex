@@ -89,4 +89,42 @@ defmodule OpenskillTest do
              ] == [[a2], [b2], [c2], [d2]]
     end
   end
+
+  describe "#rate_with_ids" do
+    test "rate_with_ids accepts returns ids next to values" do
+      # The algorithm is already tested, we are instead testing the formatting
+      # of this wrapper function
+      a1 = {"a1", Openskill.rating(29.182, 4.782)}
+      b1 = {"b1", Openskill.rating(27.174, 4.922)}
+      c1 = {"c1", Openskill.rating(16.672, 6.217)}
+      d1 = {"d1", Openskill.rating()}
+
+      result = Openskill.rate_with_ids([[a1], [b1], [c1], [d1]])
+
+      assert match?([
+        [{"a1", {_, _}}],
+        [{"b1", {_, _}}],
+        [{"c1", {_, _}}],
+        [{"d1", {_, _}}]
+      ], result)
+
+      # Ensure the format of the result is correct in a 2v2 situation too
+      result = Openskill.rate_with_ids([[a1, b1], [c1, d1]])
+
+      assert match?([
+        [{"a1", {_, _}}, {"b1", {_, _}}],
+        [{"c1", {_, _}}, {"d1", {_, _}}]
+      ], result)
+
+      # Now ensure it adheres to the :as_map option
+      result = Openskill.rate_with_ids([[a1, b1], [c1, d1]], as_map: true)
+
+      assert match?(%{
+        "a1" => {_, _},
+        "b1" => {_, _},
+        "c1" => {_, _},
+        "d1" => {_, _}
+      }, result)
+    end
+  end
 end
