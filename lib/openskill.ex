@@ -52,11 +52,33 @@ defmodule Openskill do
     defaults = [
       weights: Util.default_weights(rating_groups),
       ranks: Util.default_ranks(rating_groups),
-      model: Openskill.PlackettLuce
+      model: Openskill.PlackettLuce,
+      tau: @env.tau,
+      prevent_sigma_increase: @env.prevent_sigma_increase
     ]
 
     options = Keyword.merge(defaults, options) |> Enum.into(%{})
-    options.model.rate(rating_groups, options)
+
+    rating_groups_with_tau =
+      Enum.map(rating_groups, fn team ->
+        Enum.map(team, fn {mu, sigma} ->
+          {mu, Math.sqrt(sigma ** 2 + options.tau ** 2)}
+        end)
+      end)
+
+    output = options.model.rate(rating_groups_with_tau, options)
+
+    if options.tau > 0 and options.prevent_sigma_increase do
+      Enum.zip(rating_groups, output)
+      |> Enum.map(fn {old_team, new_team} ->
+        Enum.zip(old_team, new_team)
+        |> Enum.map(fn {{_old_mu, old_sigma}, {new_mu, new_sigma}} ->
+          {new_mu, min(old_sigma, new_sigma)}
+        end)
+      end)
+    else
+      output
+    end
   end
 
   @doc """
@@ -120,5 +142,46 @@ defmodule Openskill do
     else
       result
     end
+  end
+
+  @doc """
+  Predict the win probability for each team. Returns a list of probabilities
+  in the same order as the input teams; the values sum to 1.
+
+  ## Examples
+
+      iex> teams = [
+      ...>   [{25, 8.333}, {30, 6.666}],
+      ...>   [{27, 7.0}, {28, 5.5}]
+      ...> ]
+      iex> Openskill.predict_win(teams)
+      [0.5000000005, 0.5000000005]
+
+  When the sum of mu is equal across teams, the result is ~50% per team
+  regardless of the sigmas. Increasing the mu of one team raises that team's
+  predicted win probability; increasing the uncertainty of any team moves
+  the result closer to 50%.
+  """
+  @spec predict_win([[mu_sigma_pair()]]) :: [float()]
+  def predict_win(teams) do
+    team_ratings = Util.team_rating(teams)
+    n = length(teams)
+    denom = n * (n - 1) / 2
+    betasq = @env.beta * @env.beta
+
+    team_ratings
+    |> Enum.with_index()
+    |> Enum.map(fn {{mu_a, sigma_sq_a, _team, _i}, i} ->
+      sum =
+        team_ratings
+        |> Enum.with_index()
+        |> Enum.filter(fn {_, q} -> i != q end)
+        |> Enum.map(fn {{mu_b, sigma_sq_b, _team, _i}, _} ->
+          Util.phi_major((mu_a - mu_b) / :math.sqrt(n * betasq + sigma_sq_a + sigma_sq_b))
+        end)
+        |> Enum.sum()
+
+      sum / denom
+    end)
   end
 end
