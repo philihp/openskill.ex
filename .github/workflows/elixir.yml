@@ -9,24 +9,24 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Setup elixir
-        uses: actions/setup-elixir@v1.5.0
-        with:
-          elixir-version: 1.9.x
-          otp-version: 22.x
-
       - name: Checkout repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4
+
+      - name: Setup elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: "1.18"
+          otp-version: "27"
 
       - name: Get deps cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: deps/
           key: ${{ runner.os }}-deps-${{ hashFiles('**/mix.lock') }}
           restore-keys: ${{ runner.os }}-deps-
 
       - name: Get build cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: _build/test/
           key: ${{ runner.os }}-build-${{ hashFiles('**/mix.lock') }}
