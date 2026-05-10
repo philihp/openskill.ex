@@ -39,7 +39,7 @@ defmodule OpenskillTest do
       c1 = Openskill.rating(16.672, 6.217)
       d1 = Openskill.rating()
 
-      [[a2], [b2], [c2], [d2]] = Openskill.rate([[a1], [b1], [c1], [d1]])
+      [[a2], [b2], [c2], [d2]] = Openskill.rate([[a1], [b1], [c1], [d1]], tau: 0)
 
       assert [
                [{30.209971908310553, 4.764898977359521}],
@@ -58,7 +58,8 @@ defmodule OpenskillTest do
       [[a2], [b2], [c2], [d2]] =
         Openskill.rate(
           [[a1], [b1], [c1], [d1]],
-          model: Openskill.BradleyTerryFull
+          model: Openskill.BradleyTerryFull,
+          tau: 0
         )
 
       assert [
@@ -78,7 +79,8 @@ defmodule OpenskillTest do
       [[a2], [b2], [c2], [d2]] =
         Openskill.rate(
           [[a1], [b1], [c1], [d1]],
-          model: Openskill.ThurstoneMostellerPart
+          model: Openskill.ThurstoneMostellerPart,
+          tau: 0
         )
 
       assert [
@@ -189,6 +191,36 @@ defmodule OpenskillTest do
 
       probabilities = Openskill.predict_win(teams)
       assert_in_delta Enum.sum(probabilities), 1.0, 1.0e-9
+    end
+  end
+
+  describe "#rate with tau" do
+    test "default tau adds noise to sigma before rating" do
+      a1 = Openskill.rating(29.182, 4.782)
+      b1 = Openskill.rating(27.174, 4.922)
+      c1 = Openskill.rating(16.672, 6.217)
+      d1 = Openskill.rating()
+
+      [[a2], [b2], [c2], [d2]] = Openskill.rate([[a1], [b1], [c1], [d1]], tau: 0.01)
+
+      assert [
+               [{30.20997558824299, 4.764909330988368}],
+               [{27.64461002009721, 4.882799245921361}],
+               [{17.403587237635527, 6.100731158882956}],
+               [{19.21478808745494, 7.854267281042293}]
+             ] == [[a2], [b2], [c2], [d2]]
+    end
+
+    test "prevent_sigma_increase clamps post-rate sigma to be no larger than pre-rate sigma" do
+      a1 = Openskill.rating(6.672, 0.0001)
+      b1 = Openskill.rating(29.182, 4.782)
+
+      [[a2], [_b2]] = Openskill.rate([[a1], [b1]], tau: 0.01, prevent_sigma_increase: true)
+
+      {_a1_mu, a1_sigma} = a1
+      {_a2_mu, a2_sigma} = a2
+
+      assert a2_sigma <= a1_sigma
     end
   end
 end
