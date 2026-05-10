@@ -127,4 +127,68 @@ defmodule OpenskillTest do
       }, result)
     end
   end
+
+  describe "#predict_win" do
+    test "equal team mu sums give equal win probability regardless of sigmas" do
+      teams = [
+        [{25, 8.333}, {30, 6.666}],
+        [{27, 7.0}, {28, 5.5}]
+      ]
+
+      assert [0.5000000005, 0.5000000005] = Openskill.predict_win(teams)
+    end
+
+    test "matches openskill.py reference output" do
+      # https://github.com/vivekjoshy/openskill.py/blob/main/docs/source/manual.rst#predicting-winners
+      teams = [
+        [{25, 25 / 3}],
+        [{33.564, 1.123}]
+      ]
+
+      assert [0.202122560771339, 0.797877439228661] = Openskill.predict_win(teams)
+    end
+
+    test "raising one team's mu raises that team's win probability" do
+      [equal_a, _equal_b] =
+        Openskill.predict_win([
+          [{50, 1}, {0, 6.666}],
+          [{25, 1}, {25, 5.5}]
+        ])
+
+      [advantaged_a, _disadvantaged_b] =
+        Openskill.predict_win([
+          [{50, 1}, {1, 6.666}],
+          [{25, 1}, {25, 5.5}]
+        ])
+
+      assert advantaged_a > equal_a
+    end
+
+    test "raising sigma on either side moves probability toward 50%" do
+      [base_a, _base_b] =
+        Openskill.predict_win([
+          [{50, 1}, {1, 6.666}],
+          [{25, 1}, {25, 5.5}]
+        ])
+
+      [noisier_a, _] =
+        Openskill.predict_win([
+          [{50, 8}, {1, 6.666}],
+          [{25, 1}, {25, 5.5}]
+        ])
+
+      assert abs(noisier_a - 0.5) < abs(base_a - 0.5)
+    end
+
+    test "probabilities sum to 1" do
+      teams = [
+        [{25, 8.333}],
+        [{30, 6.666}],
+        [{27, 7.0}]
+      ]
+
+      probabilities = Openskill.predict_win(teams)
+      assert_in_delta Enum.sum(probabilities), 1.0, 1.0e-9
+    end
+  end
 end

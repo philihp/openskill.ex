@@ -121,4 +121,45 @@ defmodule Openskill do
       result
     end
   end
+
+  @doc """
+  Predict the win probability for each team. Returns a list of probabilities
+  in the same order as the input teams; the values sum to 1.
+
+  ## Examples
+
+      iex> teams = [
+      ...>   [{25, 8.333}, {30, 6.666}],
+      ...>   [{27, 7.0}, {28, 5.5}]
+      ...> ]
+      iex> Openskill.predict_win(teams)
+      [0.5000000005, 0.5000000005]
+
+  When the sum of mu is equal across teams, the result is ~50% per team
+  regardless of the sigmas. Increasing the mu of one team raises that team's
+  predicted win probability; increasing the uncertainty of any team moves
+  the result closer to 50%.
+  """
+  @spec predict_win([[mu_sigma_pair()]]) :: [float()]
+  def predict_win(teams) do
+    team_ratings = Util.team_rating(teams)
+    n = length(teams)
+    denom = n * (n - 1) / 2
+    betasq = @env.beta * @env.beta
+
+    team_ratings
+    |> Enum.with_index()
+    |> Enum.map(fn {{mu_a, sigma_sq_a, _team, _i}, i} ->
+      sum =
+        team_ratings
+        |> Enum.with_index()
+        |> Enum.filter(fn {_, q} -> i != q end)
+        |> Enum.map(fn {{mu_b, sigma_sq_b, _team, _i}, _} ->
+          Util.phi_major((mu_a - mu_b) / :math.sqrt(n * betasq + sigma_sq_a + sigma_sq_b))
+        end)
+        |> Enum.sum()
+
+      sum / denom
+    end)
+  end
 end
