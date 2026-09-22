@@ -16,7 +16,7 @@ jobs:
         uses: erlef/setup-beam@v1
         with:
           elixir-version: "1.20"
-          otp-version: "27"
+          otp-version: "29.1.1"
 
       - name: Get deps cache
         uses: actions/cache@v5
