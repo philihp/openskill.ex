@@ -194,6 +194,46 @@ defmodule OpenskillTest do
     end
   end
 
+  describe "#rate Plackett-Luce parity with openskill.js" do
+    # Reference values are produced by openskill.js v6.x which itself is
+    # bit-for-bit aligned with openskill.py 6.x. Both expected outputs
+    # below were generated with the openskill.js default tau (25/300).
+
+    test "doubles match" do
+      inputs = [
+        [{29.182, 4.782}, {27.174, 4.922}],
+        [{16.672, 6.217}, {25.0, 25 / 3}]
+      ]
+
+      assert [
+               [
+                 {29.607340941337068, 4.755311788972862},
+                 {27.624602782532037, 4.892807828777459}
+               ],
+               [
+                 {15.953170429143093, 6.125902065139878},
+                 {23.70858117648013, 8.111707446126035}
+               ]
+             ] == Openskill.rate(inputs, tau: 25 / 300)
+    end
+
+    test "four-way free-for-all" do
+      inputs = [
+        [{29.182, 4.782}],
+        [{27.174, 4.922}],
+        [{16.672, 6.217}],
+        [{25.0, 25 / 3}]
+      ]
+
+      assert [
+               [{30.210227447000438, 4.765617924939384}],
+               [{27.644725221915632, 4.883479590134575}],
+               [{17.4036218889969, 6.101259408259549}],
+               [{19.21460876538932, 7.854669920480409}]
+             ] == Openskill.rate(inputs, tau: 25 / 300)
+    end
+  end
+
   describe "#rate with tau" do
     test "default tau adds noise to sigma before rating" do
       a1 = Openskill.rating(29.182, 4.782)
