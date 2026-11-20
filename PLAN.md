@@ -7,7 +7,8 @@ Status: proposal. No code is changed yet.
 Release `openskill` 2.0.0 on Hex. For each model and each option, version 2.0
 gives the same numbers as [openskill.js](https://github.com/philihp/openskill.js)
 5.1, bit for bit. openskill.js is the reference, because it is parity-tested
-against openskill.py 6.2.
+against openskill.py 6.2. Where openskill.js must change first, section 4 lists
+the change.
 
 The library also gets the features that openskill.js has and this library does
 not have, a current toolchain, and documentation on HexDocs.
@@ -114,10 +115,28 @@ The library gets a module `Openskill.Math` with ports of the functions that
 openskill.js uses:
 
 - `exp/1`: fdlibm `e_exp.c`, which V8 uses.
-- `erf/1`: the FreeBSD `s_erf.c` code, which `@stdlib/math-base-special-erf`
+- `erfc/1`: the FreeBSD `s_erf.c` code, which `@stdlib/math-base-special-erfc`
   uses.
 - `normal_quantile/1`: the code in `@stdlib/stats-base-dists-normal-quantile`,
   which calls `@stdlib/math-base-special-erfinv`. Only `predict_draw` uses it.
+
+The normal CDF is `0.5 * erfc(-x / sqrt(2))`. This is the formula of Python
+3.14 and of `@stdlib/stats-base-dists-normal-cdf`. Python 3.13 and earlier use
+`0.5 * (1 + erf(x / sqrt(2)))`, and openskill.js 5.1 uses that earlier formula.
+The library does not port the earlier formula, for two reasons:
+
+- The earlier formula loses accuracy in the lower tail. For `x` less than -3,
+  its relative error is up to 100%. The relative error of the `erfc` formula
+  is 1e-14 in the same range.
+- openskill.py calls `statistics.NormalDist` of the Python that runs it. On
+  Python 3.14, openskill.py 6.2.0 gives different Thurstone-Mosteller numbers
+  than on Python 3.13. In a test of 360 random games, 39% of the outputs of
+  the full model were different, by up to 0.013. The Plackett-Luce and
+  Bradley-Terry outputs were equal.
+
+openskill.js must change to the `erfc` formula before the fixtures for the
+Thurstone-Mosteller models and the predictions are made. Section 4 lists this
+change.
 
 `sqrt`, `+`, `-`, `*` and `/` are correctly rounded by IEEE 754, so they need
 no port. The operations must be in the same sequence as in openskill.js,
@@ -193,6 +212,16 @@ Each item is one pull request. The letter shows the lane. Lane A and lane B can
 run at the same time. Inside a lane, the items run in sequence, because they
 change the same files.
 
+### Changes in openskill.js that come first
+
+These changes are in the openskill.js repository. They are not in the count of
+pull requests for this repository.
+
+| ID | Change in openskill.js | Necessary for |
+|---|---|---|
+| J1 | The normal CDF uses the `erfc` formula of Python 3.14. | A2, B4, C6 |
+| J2 | `predictWin` and `predictDraw` use `n * beta²` and `players * beta²` in the denominator. openskill.py 6.2.0 uses `2 * beta²` in the two functions. The results differ by up to 0.03 and 0.07. The owner decides which formula is the reference. | C6 |
+
 ### Phase 0 — Base
 
 | ID | Pull request | Depends on |
@@ -206,7 +235,7 @@ change the same files.
 | ID | Pull request | Depends on |
 |---|---|---|
 | A1 | `Openskill.Math.exp/1`, with fixtures of raw `exp` values. | 0.3 |
-| A2 | `Openskill.Math.erf/1`, the normal PDF and CDF, and `v`, `w`, `vt`, `wt` with the openskill.js thresholds. Remove `math` and `statistics`. | A1 |
+| A2 | `Openskill.Math.erfc/1`, the normal PDF and CDF, and `v`, `w`, `vt`, `wt` with the openskill.js thresholds. Remove `math` and `statistics`. | A1, J1 |
 | A3 | `Openskill.Math.normal_quantile/1`. | A2 |
 
 ### Phase 2 — Engine (lane B)
@@ -230,7 +259,7 @@ After B4, all 5 models agree with openskill.js for `rank`, `score`, `tau` and
 | C3 | `balance`. | B4 |
 | C4 | `window_size` for the part models. | B4 |
 | C5 | `gamma` function. | B4 |
-| C6 | `predict_win/2` with options, `predict_draw/2`, `predict_rank/2`, `ordinal/2` with `alpha` and `target`. | B1, A3 |
+| C6 | `predict_win/2` with options, `predict_draw/2`, `predict_rank/2`, `ordinal/2` with `alpha` and `target`. | B1, A3, J2 |
 
 C1 to C5 change the same functions. Run a maximum of 2 at the same time.
 
@@ -243,13 +272,13 @@ C1 to C5 change the same functions. Run a maximum of 2 at the same time.
 | D3 | **Release workflow.** A GitHub release publishes to Hex and HexDocs. The owner adds the `HEX_API_KEY` secret. Publish `2.0.0-rc.1`. | D1, D2 |
 | D4 | **Release 2.0.0.** Close #13 and #15. Tell the Beyond All Reason team in issue #23. | D3, owner approval |
 
-The total is 20 pull requests.
+The total is 20 pull requests in this repository.
 
 ## 5. Risks
 
 | Risk | Control |
 |---|---|
-| A port of `erf` or `normal_quantile` does not agree with openskill.js. | Fixtures of raw function values in A2 and A3 show the first bad input. The source is small and public. |
+| A port of `erfc` or `normal_quantile` does not agree with openskill.js. | Fixtures of raw function values in A2 and A3 show the first bad input. The source is small and public. |
 | The BEAM gives different float results on arm64. | CI runs on arm64 from 0.2. |
 | openskill.js changes during the project. | The fixtures pin one version. A later version is a new, small pull request that changes the pin and the fixtures. |
 | openskill.js 5.1.1 is not on npm. | The script pins the git commit. The release of 5.1.1 is a different task. |
